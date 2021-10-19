@@ -2,6 +2,8 @@ import 'package:coder_shop/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailPage extends StatelessWidget {
+  // final Product product;
+  // const ProductDetailPage({Key? key, required this.product}) : super(key: key);
   const ProductDetailPage({Key? key}) : super(key: key);
 
   @override
