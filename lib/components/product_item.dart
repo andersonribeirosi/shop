@@ -1,5 +1,6 @@
 import 'package:coder_shop/models/product.dart';
 import 'package:coder_shop/pages/product_detail_page.dart';
+import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class ProductItem extends StatelessWidget {
@@ -17,11 +18,15 @@ class ProductItem extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (ctx) => ProductDetailPage(product: product),
-              ),
+            Navigator.of(context).pushNamed(
+              AppRoutes.PRODUCT_DETAIL,
+              arguments: product
             );
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (ctx) => ProductDetailPage(product: product),
+            //   ),
+            // );
           },
         ),
         footer: GridTileBar(

@@ -4,7 +4,9 @@ import 'package:coder_shop/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductsOverviewPage extends StatelessWidget {
+  
   final List<Product> loadedProducts = dummyProducts;
+
   ProductsOverviewPage({Key? key}) : super(key: key);
 
   @override
