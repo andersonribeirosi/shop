@@ -11,6 +11,8 @@ class CounterPage extends StatefulWidget {
 class _CounterPageState extends State<CounterPage> {
   @override
   Widget build(BuildContext context) {
+    final provider = CounterProvider.of(context);
+
     return Scaffold(
       appBar: AppBar(
         actions: [],
@@ -18,22 +20,22 @@ class _CounterPageState extends State<CounterPage> {
       ),
       body: Column(
         children: [
-          Text(CounterProvider.of(context)?.state.value.toString() ?? '0'),
+          Text(provider?.state.value.toString() ?? '0'),
           IconButton(
             onPressed: () {
               setState(() {
-                CounterProvider.of(context)?.state.inc();
+                provider?.state.inc();
               });
-              print(CounterProvider.of(context)?.state.value.toString());
+              print(provider?.state.value.toString());
             },
             icon: Icon(Icons.add),
           ),
           IconButton(
             onPressed: () {
               setState(() {
-                CounterProvider.of(context)?.state.dec();
+                provider?.state.dec();
               });
-              print(CounterProvider.of(context)?.state.value.toString());
+              print(provider?.state.value.toString());
             },
             icon: Icon(Icons.remove),
           )
