@@ -1,14 +1,12 @@
 import 'package:coder_shop/models/product.dart';
-import 'package:coder_shop/pages/product_detail_page.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
-  final Product product;
-  const ProductItem({Key? key, required this.product}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -18,16 +16,8 @@ class ProductItem extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           onTap: () {
-            Navigator.of(context).pushNamed(
-              // AppRoutes.COUNTER,
-              AppRoutes.PRODUCT_DETAIL,
-              arguments: product
-            );
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (ctx) => ProductDetailPage(product: product),
-            //   ),
-            // );
+            Navigator.of(context)
+                .pushNamed(AppRoutes.PRODUCT_DETAIL, arguments: product);
           },
         ),
         footer: GridTileBar(
@@ -36,13 +26,14 @@ class ProductItem extends StatelessWidget {
             product.title,
             style: TextStyle(
               color: Colors.white,
-              // fontWeight: FontWeight.bold,
             ),
           ),
           leading: IconButton(
             color: Colors.deepOrange,
-            onPressed: () {},
-            icon: Icon(Icons.favorite),
+            onPressed: () {
+              product.toogleFavorite();
+            },
+            icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
           ),
           trailing: IconButton(
             color: Colors.deepOrange,
