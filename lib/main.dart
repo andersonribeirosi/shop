@@ -1,3 +1,4 @@
+import 'package:coder_shop/models/product_list.dart';
 import 'package:coder_shop/pages/counter_page.dart';
 import 'package:coder_shop/pages/product_detail_page.dart';
 import 'package:coder_shop/pages/products_overview_page.dart';
@@ -5,6 +6,7 @@ import 'package:coder_shop/provider/counter.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,19 +23,22 @@ class MyApp extends StatelessWidget {
       // DeviceOrientation.portraitUp,
     ]);
     // return CounterProvider(MaterialApp());
-    return MaterialApp(
-      // title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-        fontFamily: 'Lato',
-        textTheme: const TextTheme(),
+    return ChangeNotifierProvider(
+      create: (_) => ProductList(),
+      child: MaterialApp(
+        // title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.grey,
+          fontFamily: 'Lato',
+          textTheme: const TextTheme(),
+        ),
+        home: ProductsOverviewPage(),
+        debugShowCheckedModeBanner: false,
+        routes: {
+          AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
+          // AppRoutes.COUNTER: (ctx) => CounterPage()
+        },
       ),
-      home: ProductsOverviewPage(),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
-        // AppRoutes.COUNTER: (ctx) => CounterPage()
-      },
     );
   }
 }
