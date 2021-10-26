@@ -1,3 +1,5 @@
+import 'package:coder_shop/models/cart.dart';
+import 'package:coder_shop/pages/cart_page.dart';
 import 'package:coder_shop/pages/product_detail_page.dart';
 import 'package:coder_shop/pages/products_overview_page.dart';
 import 'package:coder_shop/provider/product_list.dart';
@@ -15,11 +17,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ProductList(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductList(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Cart(),
+        )
+      ],
       child: MaterialApp(
         theme: ThemeData(
-          primarySwatch: Colors.grey,
+          primarySwatch: Colors.deepPurple,
           fontFamily: 'Lato',
           textTheme: const TextTheme(),
         ),
@@ -27,6 +36,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
+          AppRoutes.CART: (ctx) => CartPage()
         },
       ),
     );
