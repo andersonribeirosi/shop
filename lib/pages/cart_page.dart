@@ -1,4 +1,6 @@
+import 'package:coder_shop/components/cart_item.dart';
 import 'package:coder_shop/models/cart.dart';
+import 'package:coder_shop/models/order_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,10 @@ class CartPage extends StatelessWidget {
       body: Column(
         children: [
           Card(
-            margin: const EdgeInsets.all(25),
+            margin: const EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 15,
+            ),
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
@@ -34,7 +39,7 @@ class CartPage extends StatelessWidget {
                   Chip(
                     backgroundColor: Theme.of(context).primaryColor,
                     label: Text(
-                      'R\$${cart.totalAmout}',
+                      'R\$ ${cart.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                         color:
                             Theme.of(context).primaryTextTheme.headline6?.color,
@@ -49,18 +54,25 @@ class CartPage extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    onPressed: () {},
+                       onPressed: () {
+                      Provider.of<OrderList>(
+                        context,
+                        listen: false,
+                      ).addOrder(cart);
+
+                      cart.clear();
+                    },
                   ),
                 ],
               ),
             ),
           ),
-          // Expanded(
-          //   child: ListView.builder(
-          //     itemCount: items.length,
-          //     itemBuilder: (ctx, i) => CartItemWidget(items[i]),
-          //   ),
-          // )
+          Expanded(
+            child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (ctx, i) => CartItemWidget(cartItem: items[i]),
+            ),
+          )
         ],
       ),
     );

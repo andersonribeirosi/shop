@@ -1,19 +1,19 @@
 import 'package:coder_shop/models/cart.dart';
+import 'package:coder_shop/models/order_list.dart';
 import 'package:coder_shop/pages/cart_page.dart';
 import 'package:coder_shop/pages/product_detail_page.dart';
 import 'package:coder_shop/pages/products_overview_page.dart';
-import 'package:coder_shop/provider/product_list.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'models/product_list.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -24,20 +24,24 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => OrderList(),
+        ),
       ],
       child: MaterialApp(
+        title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
+          primarySwatch: Colors.purple,
+          accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
-          textTheme: const TextTheme(),
         ),
         home: ProductsOverviewPage(),
-        debugShowCheckedModeBanner: false,
         routes: {
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
-          AppRoutes.CART: (ctx) => CartPage()
+          AppRoutes.CART: (ctx) => CartPage(),
         },
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
