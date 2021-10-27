@@ -2,12 +2,10 @@ import 'package:coder_shop/components/counter/counter.dart';
 import 'package:flutter/material.dart';
 
 class CounterPage extends StatefulWidget {
-  const CounterPage({
-    Key? key,
-  }) : super(key: key);
+  const CounterPage({Key? key}) : super(key: key);
 
   @override
-  _CounterPageState createState() => _CounterPageState();
+  State<CounterPage> createState() => _CounterPageState();
 }
 
 class _CounterPageState extends State<CounterPage> {
@@ -17,7 +15,8 @@ class _CounterPageState extends State<CounterPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exemplo Contador'),
+        actions: [],
+        title: Text('Counter Page'),
       ),
       body: Column(
         children: [
@@ -27,7 +26,7 @@ class _CounterPageState extends State<CounterPage> {
               setState(() {
                 provider?.state.inc();
               });
-              print(provider?.state.value);
+              print(provider?.state.value.toString());
             },
             icon: Icon(Icons.add),
           ),
@@ -36,10 +35,10 @@ class _CounterPageState extends State<CounterPage> {
               setState(() {
                 provider?.state.dec();
               });
-              print(provider?.state.value);
+              print(provider?.state.value.toString());
             },
             icon: Icon(Icons.remove),
-          ),
+          )
         ],
       ),
     );

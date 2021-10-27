@@ -1,44 +1,92 @@
+// ignore_for_file: prefer_const_constructors
 
-import 'package:coder_shop/components/product_item.dart';
-import 'package:coder_shop/data/dummy_data.dart';
-import 'package:coder_shop/models/product.dart';
-import 'package:coder_shop/models/product_list.dart';
+import 'package:coder_shop/components/app_drawer.dart';
+import 'package:coder_shop/components/badge.dart';
+import 'package:coder_shop/components/product_grid.dart';
+import 'package:coder_shop/models/cart.dart';
+import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProductsOverviewPage extends StatelessWidget {
+enum FilterOptions { Favorite, All }
+
+class ProductsOverviewPage extends StatefulWidget {
   const ProductsOverviewPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final provider = Provider.of<ProductList>(context);
-    List<Product> loadedProducts = provider.items;
+  State<ProductsOverviewPage> createState() => _ProductsOverviewPageState();
+}
 
+class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
+  bool _showFavoriteOnly = false;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-            child: Text(
+        actions: [
+          // ignore: duplicate_ignore
+          PopupMenuButton(
+            elevation: 5,
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text('Somente Favoritos'),
+                value: FilterOptions.Favorite,
+              ),
+              PopupMenuItem(
+                child: Text('Todos'),
+                value: FilterOptions.All,
+              ),
+            ],
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.Favorite) {
+                  _showFavoriteOnly = true;
+                } else {
+                  _showFavoriteOnly = false;
+                }
+                print(_showFavoriteOnly);
+              });
+            },
+          ),
+          Consumer<Cart>(
+            // child: IconButton(
+            //     onPressed: () {
+            //       Navigator.of(context).pushNamed(AppRoutes.CART);
+            //     },
+            //     icon: Icon(
+            //       Icons.shopping_cart,
+            //       // color: Colors.white,
+            //     ),
+            //   ),
+            builder: (ctx, cart, child) => Badge(
+              // child: child!,
+              value: cart.itemsCount.toString(),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.CART);
+                },
+                icon: Icon(
+                  Icons.shopping_cart,
+                ),
+              ),
+            ),
+          ),
+        ],
+        title: Text(
           'Minha Loja',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
-        )),
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(10),
-        itemCount: dummyProducts.length,
-        itemBuilder: (ctx, i) => ProductItem(
-          product: loadedProducts[i],
-        ),
-        // ignore: prefer_const_constructors
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
         ),
       ),
+      body: ProductGrid(_showFavoriteOnly),
+    drawer: AppDrawer(),
     );
   }
 }

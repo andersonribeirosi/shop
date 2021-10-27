@@ -1,43 +1,50 @@
-import 'package:coder_shop/models/product_list.dart';
-import 'package:coder_shop/pages/counter_page.dart';
+import 'package:coder_shop/models/cart.dart';
+import 'package:coder_shop/models/order_list.dart';
+import 'package:coder_shop/pages/cart_page.dart';
+import 'package:coder_shop/pages/order_page.dart';
 import 'package:coder_shop/pages/product_detail_page.dart';
 import 'package:coder_shop/pages/products_overview_page.dart';
-import 'package:coder_shop/provider/counter.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'models/product_list.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      // DeviceOrientation.landscapeRight,
-      // DeviceOrientation.portraitUp,
-    ]);
-    // return CounterProvider(MaterialApp());
-    return ChangeNotifierProvider(
-      create: (_) => ProductList(),
-      child: MaterialApp(
-        // title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.grey,
-          fontFamily: 'Lato',
-          textTheme: const TextTheme(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductList(),
         ),
-        home: ProductsOverviewPage(),
-        debugShowCheckedModeBanner: false,
+        ChangeNotifierProvider(
+          create: (_) => Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => OrderList(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+          accentColor: Colors.deepOrange,
+          fontFamily: 'Lato',
+        ),
+        // home: ProductsOverviewPage(),
         routes: {
+          AppRoutes.HOME: (ctx) => ProductsOverviewPage(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
-          // AppRoutes.COUNTER: (ctx) => CounterPage()
+          AppRoutes.CART: (ctx) => CartPage(),
+          AppRoutes.ORDERS: (ctx) => OrderPage()
         },
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
