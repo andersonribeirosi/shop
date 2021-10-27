@@ -4,7 +4,7 @@ import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProductItem extends StatelessWidget {
+class ProductGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
@@ -46,7 +46,12 @@ class ProductItem extends StatelessWidget {
             color: Colors.deepOrange,
             onPressed: () {
               cart.addItem(product);
-              print(cart.itemsCount);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${product.name} - Adicionado com sucesso!'),
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+              );
             },
             icon: Icon(Icons.shopping_cart),
           ),

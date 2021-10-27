@@ -1,6 +1,7 @@
 import 'package:coder_shop/models/cart.dart';
 import 'package:coder_shop/models/order_list.dart';
 import 'package:coder_shop/pages/cart_page.dart';
+import 'package:coder_shop/pages/order_page.dart';
 import 'package:coder_shop/pages/product_detail_page.dart';
 import 'package:coder_shop/pages/products_overview_page.dart';
 import 'package:coder_shop/utils/app_routes.dart';
@@ -36,10 +37,12 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
         ),
-        home: ProductsOverviewPage(),
+        // home: ProductsOverviewPage(),
         routes: {
+          AppRoutes.HOME: (ctx) => ProductsOverviewPage(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
           AppRoutes.CART: (ctx) => CartPage(),
+          AppRoutes.ORDERS: (ctx) => OrderPage()
         },
         debugShowCheckedModeBanner: false,
       ),

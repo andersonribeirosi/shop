@@ -1,9 +1,9 @@
 import 'package:coder_shop/components/cart_item.dart';
 import 'package:coder_shop/models/cart.dart';
 import 'package:coder_shop/models/order_list.dart';
+import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 
 class CartPage extends StatelessWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -54,13 +54,15 @@ class CartPage extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                       onPressed: () {
+                    onPressed: () {
                       Provider.of<OrderList>(
                         context,
                         listen: false,
                       ).addOrder(cart);
 
                       cart.clear();
+                      Navigator.of(context)
+                          .pushReplacementNamed(AppRoutes.ORDERS);
                     },
                   ),
                 ],
