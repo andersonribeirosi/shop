@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:coder_shop/components/app_drawer.dart';
 import 'package:coder_shop/components/badge.dart';
 import 'package:coder_shop/components/product_grid.dart';
 import 'package:coder_shop/models/cart.dart';
@@ -85,6 +86,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
         ),
       ),
       body: ProductGrid(_showFavoriteOnly),
+    drawer: AppDrawer(),
     );
   }
 }
