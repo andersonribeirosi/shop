@@ -12,18 +12,35 @@ class ProductDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [],
-        title: Text(product.title),
+        title: Text(product.name),
       ),
-      body: Column(
-        children: [
-          Text('Categorias ${product.id}'),
-          Container(
-            child: Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            // Text('Categorias ${product.id}'),
+            Container(
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: 10),
+            Text(
+              'R\$ ${product.price}', style: TextStyle(color: Colors.grey, fontSize: 20),
+            ),
+            SizedBox(height: 10),
+            Container(
+              // padding: EdgeInsets.all(5),
+              width: double.infinity,
+              child: Text(product.description, style: TextStyle(fontSize: 20),),
+              alignment: Alignment.center,
+              // color: Colors.grey,
+            )
+          ],
+        ),
       ),
     );
   }
