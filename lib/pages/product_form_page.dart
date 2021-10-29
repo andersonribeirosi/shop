@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:coder_shop/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductFormPage extends StatefulWidget {
@@ -13,6 +16,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   final _imageUrlFocus = FocusNode();
   final _imageUrlController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+  final _formData = Map<String, Object>();
 
   @override
   void initState() {
@@ -34,15 +40,31 @@ class _ProductFormPageState extends State<ProductFormPage> {
     setState(() {});
   }
 
+  void submitForm() {
+    _formKey.currentState?.save();
+    final newProduct = Product(
+        id: Random().nextDouble().toString() as String,
+        description: _formData['description'] as String,
+        name: _formData['name'] as String,
+        imageUrl: _formData['imageUrl'] as String,
+        price: _formData['price'] as double);
+
+        print('ID: ' + newProduct.id);
+        print('NAME: ' + newProduct.name);
+        print('DESCRIPTION: ' + newProduct.description);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Formulário de Produto'),
+        actions: [IconButton(onPressed: submitForm, icon: Icon(Icons.save))],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
+          key: _formKey,
           child: ListView(
             children: [
               TextFormField(
@@ -51,6 +73,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
+                onSaved: (name) => _formData['name'] = name ?? '',
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
@@ -62,6 +85,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descriptionFocus);
                 },
+                onSaved: (price) =>
+                    _formData['price'] = double.parse(price ?? '0'),
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Descrição'),
@@ -69,6 +94,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 focusNode: _descriptionFocus,
                 keyboardType: TextInputType.multiline,
                 maxLines: 3,
+                onSaved: (description) =>
+                    _formData['description'] = description ?? '',
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -80,6 +107,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       textInputAction: TextInputAction.done,
                       focusNode: _imageUrlFocus,
                       controller: _imageUrlController,
+                      onFieldSubmitted: (_) => submitForm(),
+                      onSaved: (imageUrl) =>
+                          _formData['imageUrl'] = imageUrl ?? '',
                     ),
                   ),
                   Container(
