@@ -1,4 +1,4 @@
-import 'package:coder_shop/components/product_grid_item.dart';
+import 'package:coder_shop/components/product/product_grid_item.dart';
 import 'package:coder_shop/models/product.dart';
 import 'package:coder_shop/providers/product_list.dart';
 import 'package:flutter/material.dart';

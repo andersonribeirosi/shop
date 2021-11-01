@@ -1,5 +1,5 @@
-import 'package:coder_shop/components/app_drawer.dart';
-import 'package:coder_shop/components/product_item.dart';
+import 'package:coder_shop/components/drawer.dart';
+import 'package:coder_shop/components/product/product_item.dart';
 import 'package:coder_shop/providers/product_list.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';

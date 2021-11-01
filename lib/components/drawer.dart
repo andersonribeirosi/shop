@@ -1,4 +1,4 @@
-import 'package:coder_shop/pages/order_page.dart';
+import 'package:coder_shop/pages/order/order_page.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 

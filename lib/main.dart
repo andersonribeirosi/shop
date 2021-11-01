@@ -1,11 +1,12 @@
 import 'package:coder_shop/models/cart.dart';
 import 'package:coder_shop/models/order_list.dart';
-import 'package:coder_shop/pages/cart_page.dart';
-import 'package:coder_shop/pages/order_page.dart';
-import 'package:coder_shop/pages/product_detail_page.dart';
-import 'package:coder_shop/pages/product_form_page.dart';
-import 'package:coder_shop/pages/products_overview_page.dart';
-import 'package:coder_shop/pages/products_page.dart';
+import 'package:coder_shop/pages/cart/cart_page.dart';
+import 'package:coder_shop/pages/order/order_page.dart';
+import 'package:coder_shop/pages/product/product_detail_page.dart';
+import 'package:coder_shop/pages/product/product_form_page.dart';
+import 'package:coder_shop/pages/product/products_overview_page.dart';
+import 'package:coder_shop/pages/product/products_page.dart';
+
 import 'package:coder_shop/providers/product_list.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
