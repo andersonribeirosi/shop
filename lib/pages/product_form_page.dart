@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:coder_shop/models/product.dart';
+import 'package:coder_shop/models/product_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _imageUrlController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  final _formData = Map<String, Object>();
+  final _formData = <String, Object>{};
 
   @override
   void initState() {
@@ -41,7 +43,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   void submitForm() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
     _formKey.currentState?.save();
+
     final newProduct = Product(
         id: Random().nextDouble().toString() as String,
         description: _formData['description'] as String,
@@ -49,9 +58,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
         imageUrl: _formData['imageUrl'] as String,
         price: _formData['price'] as double);
 
-        print('ID: ' + newProduct.id);
-        print('NAME: ' + newProduct.name);
-        print('DESCRIPTION: ' + newProduct.description);
+    Provider.of<ProductList>(context, listen: false).addProduct(newProduct);
+  }
+
+  bool isValidImageUrl(String url) {
+    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    bool endsWithFile = url.toLowerCase().endsWith('png') ||
+        url.toLowerCase().endsWith('jpg') ||
+        url.toLowerCase().endsWith('jpeg');
+
+    return isValidUrl && endsWithFile;
   }
 
   @override
@@ -68,12 +84,26 @@ class _ProductFormPageState extends State<ProductFormPage> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Nome'),
+                decoration: InputDecoration(
+                  labelText: 'Nome',
+                ),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
                 onSaved: (name) => _formData['name'] = name ?? '',
+                validator: (_name) {
+                  final name = _name ?? '';
+
+                  if (name.trim().isEmpty) {
+                    return 'Campo obrigatório';
+                  }
+
+                  if (name.length < 3) {
+                    return 'Informe no mínimo 3 caracteres';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
@@ -85,6 +115,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descriptionFocus);
                 },
+                validator: (_price) {
+                  final priceString = _price ?? '';
+                  final price = double.tryParse(priceString) ?? -1;
+
+                  if (price <= 0) {
+                    return 'Informe um valor válido.';
+                  }
+
+                  return null;
+                },
                 onSaved: (price) =>
                     _formData['price'] = double.parse(price ?? '0'),
               ),
@@ -94,6 +134,17 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 focusNode: _descriptionFocus,
                 keyboardType: TextInputType.multiline,
                 maxLines: 3,
+                validator: (_description) {
+                  final description = _description ?? '';
+
+                  if (description.trim().isEmpty) {
+                    return 'Campo obrigatório';
+                  } else if (description.trim().length < 10) {
+                    return 'Informe no mínimo 10 caracteres';
+                  }
+
+                  print('DESCRIPTION INPUT: ${description}');
+                },
                 onSaved: (description) =>
                     _formData['description'] = description ?? '',
               ),
@@ -102,15 +153,23 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      decoration: InputDecoration(labelText: 'Url da Imagem'),
-                      keyboardType: TextInputType.url,
-                      textInputAction: TextInputAction.done,
-                      focusNode: _imageUrlFocus,
-                      controller: _imageUrlController,
-                      onFieldSubmitted: (_) => submitForm(),
-                      onSaved: (imageUrl) =>
-                          _formData['imageUrl'] = imageUrl ?? '',
-                    ),
+                        decoration: InputDecoration(labelText: 'Url da Imagem'),
+                        keyboardType: TextInputType.url,
+                        textInputAction: TextInputAction.done,
+                        focusNode: _imageUrlFocus,
+                        controller: _imageUrlController,
+                        onFieldSubmitted: (_) => submitForm(),
+                        validator: (_imageUrl) {
+                          final imageUrl = _imageUrl ?? '';
+
+                          if (!isValidImageUrl(imageUrl)) {
+                            return 'Informe uma url válida!';
+                          } else {
+                            return null;
+                          }
+                        },
+                        onSaved: (imageUrl) =>
+                            _formData['imageUrl'] = imageUrl ?? ''),
                   ),
                   Container(
                     height: 100,
@@ -120,6 +179,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       left: 10,
                     ),
                     decoration: BoxDecoration(
+                      color: Colors.white,
                       border: Border.all(
                         color: Colors.grey,
                         width: 1,

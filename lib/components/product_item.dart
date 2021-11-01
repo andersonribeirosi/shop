@@ -11,6 +11,7 @@ class ProductItem extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(product.imageUrl),
+        backgroundColor: Colors.white,
       ),
       title: Text(product.name),
       trailing: Container(
