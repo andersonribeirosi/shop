@@ -18,7 +18,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _imageUrlController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  final _formData = <String, Object>{};
+  final _formData = Map<String, Object>();
 
   @override
   void initState() {
@@ -49,11 +49,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
       if (arg != null) {
         final product = arg as Product;
-
         _formData['id'] = product.id;
         _formData['name'] = product.name;
-        _formData['description'] = product.description;
         _formData['price'] = product.price;
+        _formData['description'] = product.description;
+        _formData['imageUrl'] = product.imageUrl;
 
         _imageUrlController.text = product.imageUrl;
       }
@@ -86,6 +86,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasId = _formData['id'] != null;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Formulário de Produto'),
@@ -96,7 +98,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Adicionado com sucesso!'),
+                    content: hasId
+                        ? Text('Atualizado com sucesso!')
+                        : Text('Adicionado com sucesso!'),
                     duration: Duration(seconds: 2),
                   ),
                 );
@@ -119,22 +123,23 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
-                onSaved: (name) => _formData['name'] = name ?? '',
+               onSaved: (name) => _formData['name'] = name ?? '',
                 validator: (_name) {
                   final name = _name ?? '';
 
                   if (name.trim().isEmpty) {
-                    return 'Campo obrigatório';
+                    return 'Nome é obrigatório';
                   }
 
-                  if (name.length < 3) {
-                    return 'Informe no mínimo 3 caracteres';
+                  if (name.trim().length < 3) {
+                    return 'Nome precisa no mínimo de 3 letras.';
                   }
+
                   return null;
                 },
               ),
               TextFormField(
-                initialValue: _formData['price'].toString(),
+                initialValue: _formData['price']?.toString(),
                 decoration: InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
                 focusNode: _priceFocus,
@@ -145,20 +150,20 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   FocusScope.of(context).requestFocus(_descriptionFocus);
                 },
                 validator: (_price) {
-                  final priceString = _price ?? '';
+              final priceString = _price ?? '';
                   final price = double.tryParse(priceString) ?? -1;
 
                   if (price <= 0) {
-                    return 'Informe um valor válido.';
+                    return 'Informe um preço válido.';
                   }
 
                   return null;
                 },
                 onSaved: (price) =>
-                    _formData['price'] = double.parse(price ?? '0'),
+                   _formData['price'] = double.parse(price ?? '0'),
               ),
               TextFormField(
-                initialValue: _formData['description'].toString(),
+                initialValue: _formData['description']?.toString(),
                 decoration: InputDecoration(labelText: 'Descrição'),
                 textInputAction: TextInputAction.next,
                 focusNode: _descriptionFocus,
