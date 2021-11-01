@@ -1,7 +1,5 @@
-import 'dart:math';
-
 import 'package:coder_shop/models/product.dart';
-import 'package:coder_shop/models/product_list.dart';
+import 'package:coder_shop/providers/product_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +40,26 @@ class _ProductFormPageState extends State<ProductFormPage> {
     setState(() {});
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+
+      if (arg != null) {
+        final product = arg as Product;
+
+        _formData['id'] = product.id;
+        _formData['name'] = product.name;
+        _formData['description'] = product.description;
+        _formData['price'] = product.price;
+
+        _imageUrlController.text = product.imageUrl;
+      }
+    }
+  }
+
   void submitForm() {
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -51,14 +69,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     _formKey.currentState?.save();
 
-    final newProduct = Product(
-        id: Random().nextDouble().toString() as String,
-        description: _formData['description'] as String,
-        name: _formData['name'] as String,
-        imageUrl: _formData['imageUrl'] as String,
-        price: _formData['price'] as double);
+    Provider.of<ProductList>(context, listen: false)
+        .addProductFromData(_formData);
 
-    Provider.of<ProductList>(context, listen: false).addProduct(newProduct);
+    Navigator.of(context).pop();
   }
 
   bool isValidImageUrl(String url) {
@@ -75,7 +89,20 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Formulário de Produto'),
-        actions: [IconButton(onPressed: submitForm, icon: Icon(Icons.save))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                submitForm();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Adicionado com sucesso!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+              icon: Icon(Icons.save))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -84,6 +111,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: _formData['name']?.toString(),
                 decoration: InputDecoration(
                   labelText: 'Nome',
                 ),
@@ -106,6 +134,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
               ),
               TextFormField(
+                initialValue: _formData['price'].toString(),
                 decoration: InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
                 focusNode: _priceFocus,
@@ -129,6 +158,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     _formData['price'] = double.parse(price ?? '0'),
               ),
               TextFormField(
+                initialValue: _formData['description'].toString(),
                 decoration: InputDecoration(labelText: 'Descrição'),
                 textInputAction: TextInputAction.next,
                 focusNode: _descriptionFocus,

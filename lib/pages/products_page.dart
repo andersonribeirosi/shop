@@ -1,6 +1,6 @@
 import 'package:coder_shop/components/app_drawer.dart';
 import 'package:coder_shop/components/product_item.dart';
-import 'package:coder_shop/models/product_list.dart';
+import 'package:coder_shop/providers/product_list.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,10 +17,11 @@ class ProductsPage extends StatelessWidget {
         title: Text('Gerenciar Produtos'),
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.PRODUCT_FORM);
-              },
-              icon: Icon(Icons.add))
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.PRODUCT_FORM);
+            },
+            icon: Icon(Icons.add),
+          )
         ],
       ),
       drawer: AppDrawer(),

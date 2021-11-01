@@ -4,13 +4,12 @@ import 'package:coder_shop/pages/cart_page.dart';
 import 'package:coder_shop/pages/order_page.dart';
 import 'package:coder_shop/pages/product_detail_page.dart';
 import 'package:coder_shop/pages/product_form_page.dart';
-import 'package:coder_shop/pages/products_page.dart';
 import 'package:coder_shop/pages/products_overview_page.dart';
+import 'package:coder_shop/pages/products_page.dart';
+import 'package:coder_shop/providers/product_list.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'models/product_list.dart';
 
 void main() {
   runApp(MyApp());
