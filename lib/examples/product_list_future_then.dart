@@ -37,9 +37,9 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product product) async {
+  Future<void> addProduct(Product product) {
     // É necessário colocar .jon depois da barra, junto com o nome que deseja para salvar a coleção - Ex: /products.json
-    final response = await http.post(Uri.parse('${baseUrl}/products.json'),
+    final future = http.post(Uri.parse('${baseUrl}/products.json'),
         body: jsonEncode({
           "name": product.name,
           "description": product.description,
@@ -48,22 +48,21 @@ class ProductList with ChangeNotifier {
           "imageUrl": product.imageUrl
         }));
 
-// name: nome do retorno do ID que vem do firebase
-    final id = jsonDecode(response.body)['name'];
-
-    _items.add(
-      Product(
-          id: id,
-          name: product.name,
-          description: product.description,
-          imageUrl: product.imageUrl,
-          price: product.price),
-    );
-
-    notifyListeners();
+    return future.then<void>((response) {
+      final id = jsonDecode(response.body)['name'];
+      _items.add(
+        Product(
+            id: id,
+            name: product.name,
+            description: product.description,
+            imageUrl: product.imageUrl,
+            price: product.price),
+      );
+      notifyListeners();
+    }).then((value) => null);
   }
 
-  Future<void> updateProduct(Product product) async {
+  Future<void> updateProduct(Product product) {
     int index = _items.indexWhere((i) => i.id == product.id);
 
     if (index >= 0) {
@@ -71,7 +70,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
     }
 
-    return await Future.value();
+    return Future.value();
   }
 
   void removeProduct(Product product) {
