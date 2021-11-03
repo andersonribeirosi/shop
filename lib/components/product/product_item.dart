@@ -31,28 +31,28 @@ class ProductItem extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                showDialog(
+                showDialog<bool>(
                   context: context,
                   builder: (ctx) => AlertDialog(
                     title: Text('Deseja realmente excluir?'),
                     actions: [
                       TextButton(
-                        onPressed: () {
-                          Navigator.of(ctx).pop();
-                        },
+                        onPressed: () => Navigator.of(ctx).pop(false),
                         child: Text('Não'),
                       ),
                       TextButton(
-                        onPressed: () {
-                          Provider.of<ProductList>(context, listen: false)
-                              .removeProduct(product);
-                          Navigator.of(ctx).pop();
-                        },
+                        onPressed: () => Navigator.of(ctx).pop(true),
                         child: Text('Sim'),
                       )
                     ],
                   ),
-                );
+                ).then((value) {
+                      if (value ?? false)
+                        {
+                          Provider.of<ProductList>(context, listen: false)
+                              .removeProduct(product);
+                        }
+                    });
               },
               color: Theme.of(context).errorColor,
               icon: Icon(Icons.delete),
