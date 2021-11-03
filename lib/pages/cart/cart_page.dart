@@ -55,14 +55,33 @@ class CartPage extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Provider.of<OrderList>(
-                        context,
-                        listen: false,
-                      ).addOrder(cart);
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: Text('Finalizar o pedido?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(ctx).pop();
+                              },
+                              child: Text('Não'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Provider.of<OrderList>(
+                                  context,
+                                  listen: false,
+                                ).addOrder(cart);
 
-                      cart.clear();
-                      Navigator.of(context)
-                          .pushReplacementNamed(AppRoutes.ORDERS);
+                                cart.clear();
+                                Navigator.of(context)
+                                    .pushReplacementNamed(AppRoutes.ORDERS);
+                              },
+                              child: Text('Sim'),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ],

@@ -123,7 +123,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
-               onSaved: (name) => _formData['name'] = name ?? '',
+                onSaved: (name) => _formData['name'] = name ?? '',
                 validator: (_name) {
                   final name = _name ?? '';
 
@@ -150,7 +150,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   FocusScope.of(context).requestFocus(_descriptionFocus);
                 },
                 validator: (_price) {
-              final priceString = _price ?? '';
+                  final priceString = _price ?? '';
                   final price = double.tryParse(priceString) ?? -1;
 
                   if (price <= 0) {
@@ -160,7 +160,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   return null;
                 },
                 onSaved: (price) =>
-                   _formData['price'] = double.parse(price ?? '0'),
+                    _formData['price'] = double.parse(price ?? '0'),
               ),
               TextFormField(
                 initialValue: _formData['description']?.toString(),
@@ -223,14 +223,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     alignment: Alignment.center,
                     child: _imageUrlController.text.isEmpty
                         ? Text('Informe a Url')
-                        : FittedBox(
-                            child: Image.network(
-                              _imageUrlController.text,
-                              width: 100,
-                              height: 100,
+                        : Container(
+                          width: 100,
+                          height: 100,
+                          child: FittedBox(
+                              child: Image.network(
+                                _imageUrlController.text,
+                              ),
+                              fit: BoxFit.cover,
                             ),
-                            fit: BoxFit.cover,
-                          ),
+                        ),
                   ),
                 ],
               ),
