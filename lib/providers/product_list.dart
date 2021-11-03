@@ -18,7 +18,7 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
-  void addProductFromData(Map<String, Object> data) {
+  Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
 
     final product = Product(
@@ -31,15 +31,15 @@ class ProductList with ChangeNotifier {
         price: data['price'] as double);
 
     if (!hasId) {
-      addProduct(product);
+      return addProduct(product);
     } else {
-      updateProduct(product);
+      return updateProduct(product);
     }
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     // É necessário colocar .jon depois da barra, junto com o nome que deseja para salvar a coleção - Ex: /products.json
-    http.post(Uri.parse('${baseUrl}/products.json'),
+    final future = http.post(Uri.parse('${baseUrl}/products.json'),
         body: jsonEncode({
           "name": product.name,
           "description": product.description,
@@ -47,17 +47,30 @@ class ProductList with ChangeNotifier {
           "isFavorite": product.isFavorite,
           "imageUrl": product.imageUrl
         }));
-    _items.add(product);
-    notifyListeners();
+
+    return future.then<void>((response) {
+      final id = jsonDecode(response.body)['name'];
+      _items.add(
+        Product(
+            id: id,
+            name: product.name,
+            description: product.description,
+            imageUrl: product.imageUrl,
+            price: product.price),
+      );
+      notifyListeners();
+    }).then((value) => null);
   }
 
-  void updateProduct(Product product) {
+  Future<void> updateProduct(Product product) {
     int index = _items.indexWhere((i) => i.id == product.id);
 
     if (index >= 0) {
       _items[index] = product;
       notifyListeners();
     }
+
+    return Future.value();
   }
 
   void removeProduct(Product product) {
