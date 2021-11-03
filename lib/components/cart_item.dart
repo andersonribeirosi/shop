@@ -16,9 +16,6 @@ class CartItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: ValueKey(cartItem.id),
-      onDismissed: (_) {
-        Provider.of<Cart>(context, listen: false).removeItem(cartItem.produtId);
-      },
       direction: DismissDirection.endToStart,
       background: Container(
         color: Theme.of(context).errorColor,
@@ -29,10 +26,44 @@ class CartItemWidget extends StatelessWidget {
         ),
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: 20),
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 4,
+        ),
       ),
+      confirmDismiss: (_) {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Tem certeza?'),
+            content: Text('Quer remover o item do carrinho?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop(false);
+                  },
+                  child: Text('Não')),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+                child: Text('Sim'),
+              )
+            ],
+          ),
+        );
+      },
+      onDismissed: (_) {
+        Provider.of<Cart>(
+          context,
+          listen: false,
+        ).removeItem(cartItem.produtId);
+      },
       child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 4,
+        ),
         child: Padding(
           padding: EdgeInsets.all(8),
           child: ListTile(
