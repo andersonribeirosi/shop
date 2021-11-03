@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ProductList with ChangeNotifier {
-  final baseUrl = 'https://coder-shop-firebase-default-rtdb.firebaseio.com';
+  final _url =
+      'https://coder-shop-firebase-default-rtdb.firebaseio.com/products.json';
   List<Product> _items = dummyProducts;
 
   List<Product> get items => [..._items];
@@ -16,6 +17,12 @@ class ProductList with ChangeNotifier {
 
   int get itemsCount {
     return _items.length;
+  }
+
+  Future<void> loadProducts() async {
+    final response = await http.get(Uri.parse(_url));
+
+    print(response.body);
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
@@ -39,7 +46,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     // É necessário colocar .jon depois da barra, junto com o nome que deseja para salvar a coleção - Ex: /products.json
-    final response = await http.post(Uri.parse('${baseUrl}/products.json'),
+    final response = await http.post(Uri.parse(_url),
         body: jsonEncode({
           "name": product.name,
           "description": product.description,
