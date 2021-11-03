@@ -44,10 +44,11 @@ class CartItemWidget extends StatelessWidget {
                   },
                   child: Text('Não')),
               TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop(true);
-                  },
-                  child: Text('Sim'))
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+                child: Text('Sim'),
+              )
             ],
           ),
         );
