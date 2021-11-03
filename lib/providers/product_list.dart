@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 class ProductList with ChangeNotifier {
   final _url =
       'https://coder-shop-firebase-default-rtdb.firebaseio.com/products.json';
-  List<Product> _items = dummyProducts;
+  // List<Product> _items = dummyProducts;
+  List<Product> _items = [];
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
@@ -22,7 +23,19 @@ class ProductList with ChangeNotifier {
   Future<void> loadProducts() async {
     final response = await http.get(Uri.parse(_url));
 
-    print(response.body);
+    Map<String, dynamic> data = jsonDecode(response.body);
+
+    data.forEach((productId, productData) {
+      _items.add(
+        Product(
+            id: productId,
+            name: productData['name'],
+            description: productData['description'],
+            imageUrl: productData['imageUrl'],
+            price: productData['price']),
+      );
+    });
+    notifyListeners();
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
