@@ -1,14 +1,16 @@
 import 'package:coder_shop/models/cart.dart';
 import 'package:coder_shop/models/order_list.dart';
-import 'package:coder_shop/pages/cart_page.dart';
-import 'package:coder_shop/pages/order_page.dart';
-import 'package:coder_shop/pages/product_detail_page.dart';
-import 'package:coder_shop/pages/products_overview_page.dart';
+import 'package:coder_shop/pages/cart/cart_page.dart';
+import 'package:coder_shop/pages/order/order_page.dart';
+import 'package:coder_shop/pages/product/product_detail_page.dart';
+import 'package:coder_shop/pages/product/product_form_page.dart';
+import 'package:coder_shop/pages/product/products_overview_page.dart';
+import 'package:coder_shop/pages/product/products_page.dart';
+
+import 'package:coder_shop/providers/product_list.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'models/product_list.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,7 +44,9 @@ class MyApp extends StatelessWidget {
           AppRoutes.HOME: (ctx) => ProductsOverviewPage(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
           AppRoutes.CART: (ctx) => CartPage(),
-          AppRoutes.ORDERS: (ctx) => OrderPage()
+          AppRoutes.ORDERS: (ctx) => OrderPage(),
+          AppRoutes.PRODUCTS: (ctx) => ProductsPage(),
+          AppRoutes.PRODUCT_FORM: (ctx) => ProductFormPage()
         },
         debugShowCheckedModeBanner: false,
       ),
