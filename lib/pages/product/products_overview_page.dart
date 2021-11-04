@@ -33,6 +33,10 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
     super.initState();
   }
 
+  Future<void> _refreshProducts(BuildContext context) async{
+    return await Provider.of<ProductList>(context, listen: false).loadProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,9 +102,12 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           ),
         ),
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ProductGrid(_showFavoriteOnly),
+      body: RefreshIndicator(
+        onRefresh: () => _refreshProducts(context),
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : ProductGrid(_showFavoriteOnly),
+      ),
       drawer: AppDrawer(),
     );
   }

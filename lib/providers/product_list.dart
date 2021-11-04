@@ -21,8 +21,9 @@ class ProductList with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
+    _items.clear();
     final response = await http.get(Uri.parse(_url));
-
+    if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((productId, productData) {
@@ -68,7 +69,7 @@ class ProductList with ChangeNotifier {
           "imageUrl": product.imageUrl
         }));
 
-// name: nome do retorno do ID que vem do firebase
+// name: retorno do ID que vem do firebase
     final id = jsonDecode(response.body)['name'];
 
     _items.add(
