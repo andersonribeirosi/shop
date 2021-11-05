@@ -1,5 +1,5 @@
 import 'package:coder_shop/models/cart.dart';
-import 'package:coder_shop/models/order_list.dart';
+import 'package:coder_shop/providers/order_list.dart';
 import 'package:coder_shop/pages/cart/cart_page.dart';
 import 'package:coder_shop/pages/order/order_page.dart';
 import 'package:coder_shop/pages/product/product_detail_page.dart';
