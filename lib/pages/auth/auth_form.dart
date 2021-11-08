@@ -1,3 +1,4 @@
+import 'package:coder_shop/exceptions/auth_exception.dart';
 import 'package:coder_shop/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,15 +15,26 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLogin() => _authMode == AuthMode.Login;
+  bool _isSignup() => _authMode == AuthMode.Signup;
   bool _isLoading = false;
+
   AuthMode _authMode = AuthMode.Login;
+
   Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
 
-  bool _isLogin() => _authMode == AuthMode.Login;
-  bool _isSignup() => _authMode == AuthMode.Signup;
+  void _showDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Ocorreu um problema'),
+        content: Text(msg),
+      ),
+    );
+  }
 
   void _switchAuthMode() {
     setState(() {
@@ -44,15 +56,18 @@ class _AuthFormState extends State<AuthForm> {
     setState(() => _isLoading = true);
 
     _formKey.currentState?.save();
+
     Auth auth = Provider.of(context, listen: false);
 
-    if (_isLogin()) {
-      //Login
-      await auth.login(_authData['email']!, _authData['password']!);
-    } else {
-      // Registrar
-      await auth.signup(_authData['email']!, _authData['password']!);
-    }
+    try {
+      if (_isLogin()) {
+        await auth.login(_authData['email']!, _authData['password']!);
+      } else {
+        await auth.signup(_authData['email']!, _authData['password']!);
+      }
+    } on AuthException catch (error) {
+      _showDialog(error.toString());
+    } catch (e) {}
 
     setState(() => _isLoading = false);
   }
