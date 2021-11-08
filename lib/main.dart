@@ -1,4 +1,5 @@
 import 'package:coder_shop/models/cart.dart';
+import 'package:coder_shop/pages/auth/auth_page.dart';
 import 'package:coder_shop/providers/order_list.dart';
 import 'package:coder_shop/pages/cart/cart_page.dart';
 import 'package:coder_shop/pages/order/order_page.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ),
         // home: ProductsOverviewPage(),
         routes: {
+          AppRoutes.AUTH: (ctx) => AuthPage(),
           AppRoutes.HOME: (ctx) => ProductsOverviewPage(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
           AppRoutes.CART: (ctx) => CartPage(),
