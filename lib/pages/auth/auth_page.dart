@@ -31,7 +31,7 @@ class AuthPage extends StatelessWidget {
             children: [
               Container(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 5, horizontal: 50),
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 80),
                     transform: Matrix4.rotationZ(-8 * pi / 180)..translate(-10.0),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
@@ -46,11 +46,12 @@ class AuthPage extends StatelessWidget {
                   'Minha loja',
                   style: TextStyle(
                     fontFamily: 'Anton',
-                    fontSize: 45,
+                    fontSize: 40,
                     color: Colors.white,
                   ),
                 ),
               ),
+              SizedBox(height: 10,),
               SingleChildScrollView(child: AuthForm())
             ],
           ),
