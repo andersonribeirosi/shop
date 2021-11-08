@@ -1,4 +1,4 @@
-import 'package:coder_shop/models/auth.dart';
+import 'package:coder_shop/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,9 +48,10 @@ class _AuthFormState extends State<AuthForm> {
 
     if (_isLogin()) {
       //Login
+      await auth.login(_authData['email']!, _authData['password']!);
     } else {
       // Registrar
-await auth.register(_authData['email']!, _authData['password']!);
+      await auth.signup(_authData['email']!, _authData['password']!);
     }
 
     setState(() => _isLoading = false);

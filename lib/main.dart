@@ -1,4 +1,4 @@
-import 'package:coder_shop/models/auth.dart';
+import 'package:coder_shop/providers/auth.dart';
 import 'package:coder_shop/models/cart.dart';
 import 'package:coder_shop/pages/auth/auth_page.dart';
 import 'package:coder_shop/providers/order_list.dart';
