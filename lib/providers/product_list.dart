@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ProductList with ChangeNotifier {
-  // List<Product> _items = dummyProducts;
-  String? _token;
+  final String _token;
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -38,7 +37,7 @@ class ProductList with ChangeNotifier {
           description: productData['description'],
           imageUrl: productData['imageUrl'],
           price: productData['price'],
-          isFavorite: productData['isFavorite'],
+          // isFavorite: productData['isFavorite'],
         ),
       );
     });
@@ -72,7 +71,7 @@ class ProductList with ChangeNotifier {
           "name": product.name,
           "description": product.description,
           "price": product.price,
-          "isFavorite": product.isFavorite,
+          // "isFavorite": product.isFavorite,
           "imageUrl": product.imageUrl
         }));
 
