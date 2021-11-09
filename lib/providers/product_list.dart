@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 class ProductList with ChangeNotifier {
   final String _token;
+  final String _userId;
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -19,17 +20,32 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
-  ProductList(this._token, this._items);
+  ProductList([this._token = '', this._userId = '', this._items = const []]);
 
   Future<void> loadProducts() async {
     _items.clear();
+    
     final response = await http.get(
       Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=${_token}'),
     );
+
+    // final favResponse = await http.get(Uri.parse('${Constants.FAVORITES_URL}/$_userId.json?auth=${_token}'));
+
+        final favResponse = await http.get(
+      Uri.parse(
+        '${Constants.FAVORITES_URL}/$_userId.json?auth=$_token',
+      ),
+    );
+
+    Map<String, dynamic> favData = favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
+
+    print('FAVORITOS ${favResponse.body}');
+
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((productId, productData) {
+      final isFavorite = favData[productId] ?? false;
       _items.add(
         Product(
           id: productId,
@@ -37,6 +53,7 @@ class ProductList with ChangeNotifier {
           description: productData['description'],
           imageUrl: productData['imageUrl'],
           price: productData['price'],
+          isFavorite: isFavorite
           // isFavorite: productData['isFavorite'],
         ),
       );
