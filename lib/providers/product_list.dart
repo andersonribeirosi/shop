@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:coder_shop/data/dummy_data.dart';
 import 'package:coder_shop/exceptions/http_exception.dart';
 import 'package:coder_shop/models/product.dart';
 import 'package:coder_shop/utils/constants.dart';
@@ -10,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 class ProductList with ChangeNotifier {
   // List<Product> _items = dummyProducts;
+  String? _token;
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -20,10 +20,13 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
+  ProductList(this._token, this._items);
+
   Future<void> loadProducts() async {
     _items.clear();
-    final response =
-        await http.get(Uri.parse('${Constants.PRODUCT_BASE_URL}.json'));
+    final response = await http.get(
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=${_token}'),
+    );
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
 
@@ -63,15 +66,15 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     // É necessário colocar .jon depois da barra, junto com o nome que deseja para salvar a coleção - Ex: /products.json
-    final response =
-        await http.post(Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
-            body: jsonEncode({
-              "name": product.name,
-              "description": product.description,
-              "price": product.price,
-              "isFavorite": product.isFavorite,
-              "imageUrl": product.imageUrl
-            }));
+    final response = await http.post(
+        Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=${_token}'),
+        body: jsonEncode({
+          "name": product.name,
+          "description": product.description,
+          "price": product.price,
+          "isFavorite": product.isFavorite,
+          "imageUrl": product.imageUrl
+        }));
 
 // name: retorno do ID que vem do firebase
     final id = jsonDecode(response.body)['name'];
@@ -93,7 +96,8 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-          Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'),
+          Uri.parse(
+              '${Constants.PRODUCT_BASE_URL}/${product.id}.json?auth=${_token}'),
           body: jsonEncode({
             "name": product.name,
             "description": product.description,
@@ -118,7 +122,9 @@ class ProductList with ChangeNotifier {
 
       // await http.delete(Uri.parse('$_baseUrl/${product.id}.json'));
       final response = await http.delete(
-          Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'));
+        Uri.parse(
+            '${Constants.PRODUCT_BASE_URL}/${product.id}.json?auth=${_token}'),
+      );
 
       if (response.statusCode >= 400) {
         _items.insert(index, product);

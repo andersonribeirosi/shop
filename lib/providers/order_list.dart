@@ -1,15 +1,14 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:coder_shop/models/cart.dart';
 import 'package:coder_shop/models/cart_item.dart';
 import 'package:coder_shop/models/order.dart';
-import 'package:coder_shop/models/product.dart';
 import 'package:coder_shop/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class OrderList with ChangeNotifier {
+  String? _token;
   List<Order> _items = [];
 
   List<Order> get items {
@@ -20,10 +19,12 @@ class OrderList with ChangeNotifier {
     return _items.length;
   }
 
+  OrderList(this._token, this._items);
+
   Future<void> loadOrders() async {
     _items.clear();
     final response = await http.get(
-      Uri.parse('${Constants.ORDER_BASE_URL}.json'),
+      Uri.parse('${Constants.ORDER_BASE_URL}.json?auth=${_token}'),
     );
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
