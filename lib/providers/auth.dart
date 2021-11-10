@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:coder_shop/exceptions/auth_exception.dart';
@@ -8,6 +9,7 @@ class Auth with ChangeNotifier {
   String? _token;
   String? _email;
   String? _userId;
+  Timer? _logoutTimer;
   DateTime? _expiryDate;
 
   bool get isAuth {
@@ -56,6 +58,7 @@ class Auth with ChangeNotifier {
           seconds: int.parse(body['expiresIn']),
         ),
       );
+      _autoLogout();
       notifyListeners();
     }
 
@@ -75,6 +78,21 @@ class Auth with ChangeNotifier {
     _email = null;
     _userId = null;
     _expiryDate = null;
+    _clearLogoutTimer();
     notifyListeners();
+  }
+
+  void _clearLogoutTimer() {
+    _logoutTimer?.cancel();
+    _logoutTimer = null;
+  }
+
+  void _autoLogout() {
+    _clearLogoutTimer();
+    final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
+    _logoutTimer = Timer(
+      Duration(seconds: timeToLogout ?? 0),
+      logOut,
+    );
   }
 }
