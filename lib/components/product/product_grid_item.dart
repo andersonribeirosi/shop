@@ -1,5 +1,6 @@
 import 'package:coder_shop/models/cart.dart';
 import 'package:coder_shop/models/product.dart';
+import 'package:coder_shop/providers/auth.dart';
 import 'package:coder_shop/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +9,8 @@ class ProductGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-
     final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -20,41 +21,43 @@ class ProductGridItem extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           onTap: () {
-            Navigator.of(context)
-                .pushNamed(AppRoutes.PRODUCT_DETAIL, arguments: product);
+            Navigator.of(context).pushNamed(
+              AppRoutes.PRODUCT_DETAIL,
+              arguments: product,
+            );
           },
         ),
         footer: GridTileBar(
-          backgroundColor: Colors.black54,
-          title: Text(
-            product.name,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
+          backgroundColor: Colors.black87,
           leading: Consumer<Product>(
-            builder: (ctx, productListen, _) => IconButton(
-              color: Colors.deepOrange,
+            builder: (ctx, product, _) => IconButton(
               onPressed: () {
-                product.toogleFavorite();
+                product.toggleFavorite(
+                  auth.token ?? '',
+                  auth.userId ?? '',
+                );
               },
               icon: Icon(
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
+          title: Text(
+            product.name,
+            textAlign: TextAlign.center,
+          ),
           trailing: IconButton(
-            color: Colors.deepOrange,
+            icon: Icon(Icons.shopping_cart),
+            color: Theme.of(context).colorScheme.secondary,
             onPressed: () {
               cart.addItem(product);
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('${product.name} - Adicionado com sucesso!'),
-                  // backgroundColor: Theme.of(context).primaryColor,
+                  content: Text('Produto adicionado com sucesso!'),
                   duration: Duration(seconds: 2),
                   action: SnackBarAction(
                     label: 'DESFAZER',
-                    // textColor: Colors.white,
                     onPressed: () {
                       cart.removeSingleItem(product.id);
                     },
@@ -62,7 +65,6 @@ class ProductGridItem extends StatelessWidget {
                 ),
               );
             },
-            icon: Icon(Icons.shopping_cart),
           ),
         ),
       ),

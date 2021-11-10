@@ -62,7 +62,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
   }
 
-  Future<void> submitForm() async {
+  void submitForm() {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -75,13 +75,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
       _isLoading = true;
     });
 
-    try {
-      await Provider.of<ProductList>(context, listen: false)
-          .saveProduct(_formData);
-
-      Navigator.of(context).pop();
-    } catch (e) {
-      await showDialog<void>(
+    Provider.of<ProductList>(context, listen: false)
+        .saveProduct(_formData)
+        .catchError((error) {
+      return showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text('Ocorreu um erro'),
@@ -96,11 +93,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
           ],
         ),
       );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    }).then((value) => {
+              setState(() {
+                _isLoading = false;
+              }),
+              Navigator.of(context).pop()
+            });
   }
 
   bool isValidImageUrl(String url) {
@@ -123,15 +121,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
           IconButton(
               onPressed: () {
                 submitForm();
-                // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   SnackBar(
-                //     content: hasId
-                //         ? Text('Atualizado com sucesso!')
-                //         : Text('Adicionado com sucesso!'),
-                //     duration: Duration(seconds: 2),
-                //   ),
-                // );
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: hasId
+                        ? Text('Atualizado com sucesso!')
+                        : Text('Adicionado com sucesso!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               },
               icon: Icon(Icons.save))
         ],
@@ -254,14 +252,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           alignment: Alignment.center,
                           child: _imageUrlController.text.isEmpty
                               ? Text('Informe a Url')
-                              : FittedBox(
-                                child: Image.network(
-                                  _imageUrlController.text,
+                              : Container(
                                   width: 100,
                                   height: 100,
+                                  child: FittedBox(
+                                    child: Image.network(
+                                      _imageUrlController.text,
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                fit: BoxFit.cover,
-                              ),
                         ),
                       ],
                     ),
